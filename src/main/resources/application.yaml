@@ -1,0 +1,10 @@
+info:
+  created-by: rodrigo.vidal2006@gmail.com
+  build-jdk: jdk1.11
+  application-name: ${spring.application.name}
+  implementation-build: ${build}
+  implementation-version: ${version}
+
+spring:
+  jackson:
+    date-format: yyyy-MM-dd'T'HH:mm:ss.SSS'Z'
