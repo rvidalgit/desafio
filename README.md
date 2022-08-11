@@ -3,6 +3,7 @@
 ### Tecnologias:
 
 * Kotlin 1.6.21
+* Gradle: 7.5
 * Java 17
 * Spring Boot 2.7.2
 * Database H2
@@ -20,6 +21,10 @@ Para interações com a sonda espacia:
 ```
 /spaceprobe
 ```
+
+### Documentação
+
+* [Documentação](http://localhost:8080/swagger-ui/index.html)
 
 ### Execução
 
