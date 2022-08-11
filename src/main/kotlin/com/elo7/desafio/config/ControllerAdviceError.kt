@@ -3,6 +3,7 @@ package com.elo7.desafio.config
 import com.elo7.desafio.config.exception.ErrorResponse
 import com.elo7.desafio.config.exception.ValidationError
 import com.elo7.desafio.exception.NotFoundException
+import com.elo7.desafio.exception.SpaceProbeCollidedException
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -44,6 +45,15 @@ class ControllerAdviceError : ResponseEntityExceptionHandler() {
     ): ResponseEntity<Any> {
         log.error(ex.message, ex)
         return generateErrorResponse(HttpStatus.NOT_FOUND, ex.message, null)
+    }
+
+    @ExceptionHandler(value = [SpaceProbeCollidedException::class])
+    fun handleSpaceProbeCollidedException(
+        ex: SpaceProbeCollidedException,
+        request: WebRequest
+    ): ResponseEntity<Any> {
+        log.error(ex.message, ex)
+        return generateErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, ex.message, null)
     }
 
     @ExceptionHandler(value = [RuntimeException::class])

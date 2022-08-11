@@ -1,5 +1,6 @@
 package com.elo7.desafio.planet.controller
 
+import com.elo7.desafio.config.exception.ValidationError
 import com.elo7.desafio.planet.model.Planet
 import com.elo7.desafio.planet.service.PlanetService
 import io.swagger.v3.oas.annotations.Operation
@@ -39,11 +40,19 @@ class PlanetController(
 
     @Operation(summary = "Responsável por retornar um planeta")
     @ApiResponses(
-        ApiResponse(responseCode = "200", description = "Planeta encontrado", content = [Content(
-            mediaType = "application/json",
-            schema = Schema(implementation = Planet::class)
-        )]),
-        ApiResponse(responseCode = "404", description = "Planeta não encontrado", content = [Content()])
+        ApiResponse(
+            responseCode = "200", description = "Planeta encontrado", content = [Content(
+                mediaType = "application/json",
+                schema = Schema(implementation = Planet::class)
+            )]
+        ),
+        ApiResponse(
+            responseCode = "404", description = "Planeta não encontrado",
+            content = [Content(
+                mediaType = "application/json",
+                schema = Schema(implementation = ValidationError::class)
+            )]
+        )
     )
     @GetMapping("/{id:\\d+}")
     fun get(@PathVariable id: Long): ResponseEntity<Planet> {
@@ -69,8 +78,20 @@ class PlanetController(
 
     @Operation(summary = "Responsável por remover um planeta e suas sondas")
     @ApiResponses(
-        ApiResponse(responseCode = "202", description = "Deleção aceita", content = [Content()]),
-        ApiResponse(responseCode = "404", description = "Planeta não encontrado", content = [Content()])
+        ApiResponse(
+            responseCode = "202", description = "Deleção aceita",
+            content = [Content(
+                mediaType = "application/json",
+                schema = Schema(implementation = ValidationError::class)
+            )]
+        ),
+        ApiResponse(
+            responseCode = "404", description = "Planeta não encontrado",
+            content = [Content(
+                mediaType = "application/json",
+                schema = Schema(implementation = ValidationError::class)
+            )]
+        )
     )
     @DeleteMapping("/{id:\\d+}")
     fun delete(@PathVariable id: Long): ResponseEntity<Any> {
