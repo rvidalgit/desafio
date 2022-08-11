@@ -3,6 +3,7 @@ package com.elo7.desafio.spaceProbe.model
 import com.elo7.desafio.planet.model.Planet
 import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonProperty
+import org.hibernate.annotations.Cascade
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
@@ -14,7 +15,7 @@ import javax.validation.constraints.NotNull
 @Entity
 @Table(
     name = "space_probe",
-    uniqueConstraints = [UniqueConstraint(name = "uk_space_probe", columnNames = ["x", "y", "planet_id"])]
+    uniqueConstraints = [UniqueConstraint(name = "UK_SPACE_PROBE", columnNames = ["x", "y", "planet_id"])]
 )
 @EntityListeners(AuditingEntityListener::class)
 class SpaceProbe(
@@ -29,7 +30,7 @@ class SpaceProbe(
     @Embedded
     var position: Position,
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 5)
     @Enumerated(EnumType.STRING)
     var direction: DirectionEnum,
 
@@ -44,6 +45,6 @@ class SpaceProbe(
     @field:NotNull
     @JsonBackReference
     @ManyToOne(optional = false)
-    @JoinColumn(name = "planet_id", referencedColumnName = "id")
+    @JoinColumn(name = "planet_id", referencedColumnName = "id", foreignKey = ForeignKey(name = "FK_PROBE_PLANET"))
     var planet: Planet
 )

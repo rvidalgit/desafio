@@ -42,8 +42,7 @@ class Planet(
     @OneToMany(
         fetch = FetchType.LAZY,
         mappedBy = "planet",
-        orphanRemoval = true,
-        cascade = [CascadeType.ALL]
+        orphanRemoval = true
     )
     val spaceProbes: Set<SpaceProbe>?
 )
