@@ -8,8 +8,8 @@ import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.time.LocalDateTime
 import javax.persistence.*
-import javax.validation.constraints.Min
 import javax.validation.constraints.NotNull
+import javax.validation.constraints.Positive
 
 @Entity
 @Table(name = "planet")
@@ -17,15 +17,16 @@ import javax.validation.constraints.NotNull
 class Planet(
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_planet")
+    @SequenceGenerator(name = "seq_planet", sequenceName = "planet_seq", allocationSize = 1)
     var id: Long? = null,
 
     @NotNull
-    @Min(value = 1)
+    @Positive
     val width: Int,
 
     @NotNull
-    @Min(value = 1)
+    @Positive
     val height: Int,
 
     @CreatedDate

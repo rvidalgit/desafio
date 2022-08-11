@@ -16,16 +16,13 @@ import javax.validation.constraints.NotNull
 class SpaceProbe(
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_space_probe")
+    @SequenceGenerator(name = "seq_space_probe", sequenceName = "space_probe_seq", allocationSize = 1)
     var id: Long? = null,
 
     @NotNull
-    @Column(nullable = false)
-    var x: Int,
-
-    @NotNull
-    @Column(nullable = false)
-    var y: Int,
+    @Embedded
+    var position: Position,
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -39,6 +36,7 @@ class SpaceProbe(
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     var updatedAt: LocalDateTime?,
 
+    @NotNull
     @JsonBackReference
     @ManyToOne(optional = false)
     @JoinColumn(name = "planet_id", referencedColumnName = "id")
