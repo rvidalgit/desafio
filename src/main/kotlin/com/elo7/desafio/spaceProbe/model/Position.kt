@@ -1,16 +1,15 @@
 package com.elo7.desafio.spaceProbe.model
 
-import javax.persistence.Column
+import org.springframework.validation.annotation.Validated
 import javax.persistence.Embeddable
-import javax.validation.constraints.NotNull
+import javax.validation.constraints.Positive
 
+@Validated
 @Embeddable
 data class Position(
-    @NotNull
-    @Column(nullable = false)
+    @field:Positive
     var x: Int,
 
-    @NotNull
-    @Column(nullable = false)
+    @field:Positive
     var y: Int
 )

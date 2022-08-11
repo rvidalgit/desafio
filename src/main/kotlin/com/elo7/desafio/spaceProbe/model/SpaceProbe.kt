@@ -8,10 +8,14 @@ import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.time.LocalDateTime
 import javax.persistence.*
+import javax.validation.Valid
 import javax.validation.constraints.NotNull
 
 @Entity
-@Table(name = "space_probe")
+@Table(
+    name = "space_probe",
+    uniqueConstraints = [UniqueConstraint(name = "uk_space_probe", columnNames = ["x", "y", "planet_id"])]
+)
 @EntityListeners(AuditingEntityListener::class)
 class SpaceProbe(
 
@@ -20,7 +24,8 @@ class SpaceProbe(
     @SequenceGenerator(name = "seq_space_probe", sequenceName = "space_probe_seq", allocationSize = 1)
     var id: Long? = null,
 
-    @NotNull
+    @field:Valid
+    @field:NotNull
     @Embedded
     var position: Position,
 
@@ -36,7 +41,7 @@ class SpaceProbe(
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     var updatedAt: LocalDateTime?,
 
-    @NotNull
+    @field:NotNull
     @JsonBackReference
     @ManyToOne(optional = false)
     @JoinColumn(name = "planet_id", referencedColumnName = "id")

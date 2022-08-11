@@ -21,12 +21,12 @@ class Planet(
     @SequenceGenerator(name = "seq_planet", sequenceName = "planet_seq", allocationSize = 1)
     var id: Long? = null,
 
-    @NotNull
-    @Positive
+    @field:NotNull
+    @field:Positive
     val width: Int,
 
-    @NotNull
-    @Positive
+    @field:NotNull
+    @field:Positive
     val height: Int,
 
     @CreatedDate
