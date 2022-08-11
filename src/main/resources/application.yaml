@@ -8,3 +8,26 @@ info:
 spring:
   jackson:
     date-format: yyyy-MM-dd'T'HH:mm:ss.SSS'Z'
+
+springdoc:
+  show-actuator: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: 'health'
+  endpoint:
+    env:
+      post:
+        enabled: true
+    info:
+      enabled: true
+    health:
+      enabled: true
+    scheduledtasks:
+      enabled: true
+    refresh:
+      enabled: true
+    shutdown:
+      enabled: false
