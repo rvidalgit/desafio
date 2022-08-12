@@ -3,7 +3,6 @@ package com.elo7.desafio.spaceProbe.model
 import com.elo7.desafio.planet.model.Planet
 import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonProperty
-import org.hibernate.annotations.Cascade
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
@@ -29,10 +28,6 @@ class SpaceProbe(
     @field:NotNull
     @Embedded
     var position: Position,
-
-    @Column(nullable = false, length = 5)
-    @Enumerated(EnumType.STRING)
-    var direction: DirectionEnum,
 
     @CreatedDate
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)

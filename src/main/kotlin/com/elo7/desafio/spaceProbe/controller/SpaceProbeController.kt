@@ -2,6 +2,7 @@ package com.elo7.desafio.spaceProbe.controller
 
 import com.elo7.desafio.config.exception.ValidationError
 import com.elo7.desafio.spaceProbe.model.SpaceProbe
+import com.elo7.desafio.spaceProbe.request.CommandRequest
 import com.elo7.desafio.spaceProbe.service.SpaceProbeService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
@@ -136,5 +137,14 @@ class SpaceProbeController(
         } catch (ex: EmptyResultDataAccessException) {
             ResponseEntity.status(HttpStatus.NOT_FOUND).build()
         }
+    }
+
+    // TODO: documentar api 
+    @PatchMapping("/{id:\\d+}")
+    fun commandExecution(
+        @Valid @RequestBody send: CommandRequest,
+        @PathVariable id: Long
+    ) {
+        return spaceProbeService.executeCommand(send.command, id)
     }
 }

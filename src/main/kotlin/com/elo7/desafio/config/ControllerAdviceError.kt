@@ -2,6 +2,7 @@ package com.elo7.desafio.config
 
 import com.elo7.desafio.config.exception.ErrorResponse
 import com.elo7.desafio.config.exception.ValidationError
+import com.elo7.desafio.exception.InvalidProbePositionException
 import com.elo7.desafio.exception.NotFoundException
 import com.elo7.desafio.exception.SpaceProbeCollidedException
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
@@ -45,6 +46,15 @@ class ControllerAdviceError : ResponseEntityExceptionHandler() {
     ): ResponseEntity<Any> {
         log.error(ex.message, ex)
         return generateErrorResponse(HttpStatus.NOT_FOUND, ex.message, null)
+    }
+
+    @ExceptionHandler(value = [InvalidProbePositionException::class])
+    fun handleInvalidProbePositionException(
+        ex: InvalidProbePositionException,
+        request: WebRequest
+    ): ResponseEntity<Any> {
+        log.error(ex.message, ex)
+        return generateErrorResponse(HttpStatus.BAD_REQUEST, ex.message, null)
     }
 
     @ExceptionHandler(value = [SpaceProbeCollidedException::class])
