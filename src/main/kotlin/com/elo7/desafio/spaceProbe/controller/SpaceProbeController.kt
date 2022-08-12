@@ -3,6 +3,7 @@ package com.elo7.desafio.spaceProbe.controller
 import com.elo7.desafio.config.exception.ValidationError
 import com.elo7.desafio.spaceProbe.model.SpaceProbe
 import com.elo7.desafio.spaceProbe.request.CommandRequest
+import com.elo7.desafio.spaceProbe.response.Message
 import com.elo7.desafio.spaceProbe.service.SpaceProbeService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
@@ -32,6 +33,13 @@ class SpaceProbeController(
             )],
             responseCode = "201",
             description = "Sonda da cadastrada"
+        ),
+        ApiResponse(
+            responseCode = "400", description = "Posição inválida, fora das dimensões do planeta",
+            content = [Content(
+                mediaType = "application/json",
+                schema = Schema(implementation = ValidationError::class)
+            )]
         ),
         ApiResponse(
             responseCode = "404", description = "Sonda não encontrada",
@@ -139,12 +147,36 @@ class SpaceProbeController(
         }
     }
 
-    // TODO: documentar api 
+    @Operation(summary = "Responsável por receber os comandos de operação da sonda")
+    @ApiResponses(
+        ApiResponse(
+            responseCode = "200", description = "Comando executado",
+            content = [Content(
+                mediaType = "application/json",
+                schema = Schema(implementation = Message::class)
+            )]
+        ),
+        ApiResponse(
+            responseCode = "404", description = "Sonda não encontrada",
+            content = [Content(
+                mediaType = "application/json",
+                schema = Schema(implementation = ValidationError::class)
+            )]
+        ),
+        ApiResponse(
+            responseCode = "400", description = "Posição inválida, fora das dimensões do planeta",
+            content = [Content(
+                mediaType = "application/json",
+                schema = Schema(implementation = ValidationError::class)
+            )]
+        )
+    )
     @PatchMapping("/{id:\\d+}")
+    @ResponseStatus(HttpStatus.OK)
     fun commandExecution(
         @Valid @RequestBody send: CommandRequest,
         @PathVariable id: Long
-    ) {
+    ): Message {
         return spaceProbeService.executeCommand(send.command, id)
     }
 }

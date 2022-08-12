@@ -10,10 +10,7 @@ import javax.validation.constraints.Positive
 @Validated
 @Embeddable
 data class Position(
-    @field:Positive
     var x: Int,
-
-    @field:Positive
     var y: Int,
 
     @field:Column(nullable = false, length = 5)
@@ -22,7 +19,7 @@ data class Position(
 ) {
     fun move(action: Char) {
         if (action == 'M') {
-            newPosition()
+            toWalk()
         } else {
             turn(action)
         }
@@ -32,7 +29,7 @@ data class Position(
         direction = direction.turn(to)
     }
 
-    private fun newPosition() {
+    private fun toWalk() {
         if (direction === DirectionEnum.NORTH || direction === DirectionEnum.SOUTH) y += direction.operation
         if (direction === DirectionEnum.EAST || direction === DirectionEnum.WEST) x += direction.operation
     }
