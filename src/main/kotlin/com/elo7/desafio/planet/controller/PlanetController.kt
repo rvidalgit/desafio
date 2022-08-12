@@ -72,7 +72,7 @@ class PlanetController(
     fun list(
         @RequestParam("page", defaultValue = "0", required = false) page: Int,
         @RequestParam("size", defaultValue = "10", required = false) size: Int
-    ): Iterable<Planet> {
+    ): Page<Planet> {
         return planetService.list(page, size)
     }
 

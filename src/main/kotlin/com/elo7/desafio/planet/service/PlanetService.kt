@@ -2,6 +2,7 @@ package com.elo7.desafio.planet.service
 
 import com.elo7.desafio.planet.model.Planet
 import com.elo7.desafio.planet.repository.PlanetRepository
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import java.util.*
@@ -19,7 +20,7 @@ class PlanetService(
         return planetRepository.findById(id)
     }
 
-    fun list(page: Int, size: Int): Iterable<Planet> {
+    fun list(page: Int, size: Int): Page<Planet> {
         return planetRepository.findAll(PageRequest.of(page, size))
     }
 
