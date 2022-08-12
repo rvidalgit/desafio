@@ -31,7 +31,7 @@ class SwaggerConfig {
     private fun getServers(): MutableList<Server> {
         return mutableListOf(
             Server().url("http://localhost:8080").description("Development server"),
-            Server().url("https://aws.com").description("Production server")
+            Server().url("https://desafio-elo7.herokuapp.com").description("Production server")
         )
     }
 

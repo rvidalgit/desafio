@@ -1,6 +1,6 @@
 info:
   created-by: rodrigo.vidal2006@gmail.com
-  build-jdk: jdk1.11
+  build-jdk: jdk1.17
   application-name: ${spring.application.name}
   implementation-build: ${build}
   implementation-version: ${version}
