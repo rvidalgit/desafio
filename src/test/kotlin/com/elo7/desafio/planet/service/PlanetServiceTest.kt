@@ -6,6 +6,7 @@ import com.elo7.desafio.SIZE_10
 import com.elo7.desafio.planet.model.Planet
 import com.elo7.desafio.planet.repository.PlanetRepository
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks

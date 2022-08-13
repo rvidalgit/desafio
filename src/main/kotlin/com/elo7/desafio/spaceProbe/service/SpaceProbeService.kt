@@ -5,6 +5,7 @@ import com.elo7.desafio.exception.NotFoundException
 import com.elo7.desafio.exception.SpaceProbeCollidedException
 import com.elo7.desafio.planet.repository.PlanetRepository
 import com.elo7.desafio.spaceProbe.component.CommandInterpreterComponent
+import com.elo7.desafio.spaceProbe.extension.move
 import com.elo7.desafio.spaceProbe.isInvalidPosition
 import com.elo7.desafio.spaceProbe.model.SpaceProbe
 import com.elo7.desafio.spaceProbe.repository.SpaceProbeRepository
