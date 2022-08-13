@@ -1,4 +1,4 @@
-package com.elo7.desafio.spaceProbe
+package com.elo7.desafio.spaceProbe.extension
 
 import com.elo7.desafio.spaceProbe.model.SpaceProbe
 import kotlin.math.abs
