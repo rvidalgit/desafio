@@ -25,8 +25,9 @@ Para interações com a sonda espacia:
 
 ### Documentação
 
-* [Documentação - stg](http://localhost:8080/swagger-ui/index.html)
-* [Documentação - prd](https://desafio-elo7.herokuapp.com/swagger-ui/index.html)
+* [Documentação - dev](http://localhost:8080/swagger-ui/index.html)
+* [Documentação - stg](https://desafio-elo7-stg.herokuapp.com/swagger-ui/index.html)
+* [Documentação - prd](https://desafio-elo7-prd.herokuapp.com/swagger-ui/index.html)
 
 ### Execução
 
