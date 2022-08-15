@@ -42,7 +42,7 @@ class SpaceProbeController(
             )]
         ),
         ApiResponse(
-            responseCode = "404", description = "Sonda não encontrada",
+            responseCode = "404", description = "Planeta não encontrado",
             content = [Content(
                 mediaType = "application/json",
                 schema = Schema(implementation = ValidationError::class)

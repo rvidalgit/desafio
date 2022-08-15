@@ -7,6 +7,7 @@
 * Java 17
 * Spring Boot 2.7.2
 * Database H2
+* PostgreSQL 14
 * Swagger 1.6.9
 
 ### Endpoints
