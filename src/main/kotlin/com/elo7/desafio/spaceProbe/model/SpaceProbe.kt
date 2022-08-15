@@ -1,7 +1,6 @@
 package com.elo7.desafio.spaceProbe.model
 
 import com.elo7.desafio.planet.model.Planet
-import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
@@ -38,7 +37,6 @@ class SpaceProbe(
     var updatedAt: LocalDateTime?,
 
     @field:NotNull
-    @JsonBackReference
     @ManyToOne(optional = false)
     @JoinColumn(name = "planet_id", referencedColumnName = "id", foreignKey = ForeignKey(name = "FK_PROBE_PLANET"))
     var planet: Planet

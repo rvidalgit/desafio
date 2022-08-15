@@ -1,9 +1,6 @@
 package com.elo7.desafio.spaceProbe.controller
 
-import com.elo7.desafio.NORTH
-import com.elo7.desafio.SPACE_PROBE_ID_1
-import com.elo7.desafio.SPACE_PROBE_POSITION_1
-import com.elo7.desafio.SPACE_PROBE_POSITION_2
+import com.elo7.desafio.*
 import com.elo7.desafio.util.TestUtil
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -112,5 +109,167 @@ class SpaceProbeControllerTest {
             )
     }
 
+    @Test
+    @Sql("/sql/insert-planet.sql", "/sql/insert-space-probe.sql")
+    fun get() {
+        mvc.perform(
+            MockMvcRequestBuilders
+                .get("$URL_BASE/$SPACE_PROBE_ID_1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(TestUtil.readJsonFile("space-probe-request.json"))
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(
+                MockMvcResultMatchers.jsonPath("\$.id").isNotEmpty
+            )
+            .andExpect(
+                MockMvcResultMatchers.jsonPath("\$.position.x").value(SPACE_PROBE_POSITION_2)
+            )
+            .andExpect(
+                MockMvcResultMatchers.jsonPath("\$.position.y").value(SPACE_PROBE_POSITION_3)
+            )
+            .andExpect(
+                MockMvcResultMatchers.jsonPath("\$.position.direction").value(NORTH)
+            )
+    }
+
+    @Test
+    fun `Erro ao pegar sonda - sonda nao encontrada`() {
+        mvc.perform(
+            MockMvcRequestBuilders
+                .get("$URL_BASE/$SPACE_PROBE_ID_1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(MockMvcResultMatchers.status().isNotFound)
+
+    }
+
+    @Test
+    @Sql("/sql/insert-multi-planet-and-space-probe.sql")
+    fun list() {
+        mvc.perform(
+            MockMvcRequestBuilders
+                .get(URL_BASE)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.number").value(0))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.size").value(10))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.totalElements").value(2))
+    }
+
+    @Test
+    @Sql("/sql/insert-multi-planet-and-space-probe.sql")
+    fun listByPlanet() {
+        mvc.perform(
+            MockMvcRequestBuilders
+                .get("$URL_BASE?idPlanet=$PLANET_ID_2")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.number").value(0))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.size").value(10))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.totalElements").value(1))
+    }
+
+    @Test
+    @Sql("/sql/insert-planet.sql", "/sql/insert-space-probe.sql")
+    fun delete() {
+        mvc.perform(
+            MockMvcRequestBuilders
+                .delete("$URL_BASE/$SPACE_PROBE_ID_1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(MockMvcResultMatchers.status().isAccepted)
+    }
+
+    @Test
+    fun `Erro ao deletar - sonda nao encontrada`() {
+        mvc.perform(
+            MockMvcRequestBuilders
+                .delete("$URL_BASE/$SPACE_PROBE_ID_1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(MockMvcResultMatchers.status().isNotFound)
+    }
+
+    @Test
+    @Sql("/sql/insert-multi-planet-and-space-probe.sql")
+    fun commandExecutionCase1() {
+        mvc.perform(
+            MockMvcRequestBuilders
+                .patch("$URL_BASE/$SPACE_PROBE_ID_1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(TestUtil.readJsonFile("command1.json"))
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(
+                MockMvcResultMatchers.jsonPath("\$.message")
+                    .value("Posição final da sonda: x=1 y=3 apontando para norte")
+            )
+    }
+
+    @Test
+    @Sql("/sql/insert-multi-planet-and-space-probe.sql")
+    fun commandExecutionCase2() {
+        mvc.perform(
+            MockMvcRequestBuilders
+                .patch("$URL_BASE/$SPACE_PROBE_ID_2")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(TestUtil.readJsonFile("command2.json"))
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(
+                MockMvcResultMatchers.jsonPath("\$.message")
+                    .value("Posição final da sonda: x=5 y=1 apontando para norte")
+            )
+    }
+
+    @Test
+    @Sql("/sql/insert-multi-planet-and-space-probe.sql")
+    fun `Teste com erro - posicao invalida`() {
+        mvc.perform(
+            MockMvcRequestBuilders
+                .patch("$URL_BASE/$SPACE_PROBE_ID_1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(TestUtil.readJsonFile("command3.json"))
+        )
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andExpect(
+                MockMvcResultMatchers.jsonPath("\$.message")
+                    .value("Essas instruções iriam levar a sonda para uma posição inválida")
+            )
+            .andExpect(
+                MockMvcResultMatchers.jsonPath("\$.timestamp").isNotEmpty
+            )
+    }
+
+    @Test
+    fun `Teste com erro - sonda nao encontrada`() {
+        mvc.perform(
+            MockMvcRequestBuilders
+                .patch("$URL_BASE/$SPACE_PROBE_ID_1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(TestUtil.readJsonFile("command3.json"))
+        )
+            .andExpect(MockMvcResultMatchers.status().isNotFound)
+            .andExpect(
+                MockMvcResultMatchers.jsonPath("\$.message")
+                    .value("Sonda não encontrada")
+            )
+            .andExpect(
+                MockMvcResultMatchers.jsonPath("\$.timestamp").isNotEmpty
+            )
+    }
 
 }

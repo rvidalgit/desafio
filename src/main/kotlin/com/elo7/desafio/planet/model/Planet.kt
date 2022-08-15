@@ -1,7 +1,7 @@
 package com.elo7.desafio.planet.model
 
 import com.elo7.desafio.spaceProbe.model.SpaceProbe
-import com.fasterxml.jackson.annotation.JsonManagedReference
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
@@ -38,7 +38,7 @@ class Planet(
     var updatedAt: LocalDateTime?,
 
     @Transient
-    @JsonManagedReference
+    @JsonIgnore
     @OneToMany(
         fetch = FetchType.LAZY,
         mappedBy = "planet",
