@@ -2,11 +2,12 @@ package com.elo7.desafio.spaceProbe.service
 
 import com.elo7.desafio.exception.InvalidProbePositionException
 import com.elo7.desafio.exception.NotFoundException
-import com.elo7.desafio.exception.SpaceProbeCollidedException
 import com.elo7.desafio.planet.repository.PlanetRepository
 import com.elo7.desafio.spaceProbe.component.CommandInterpreterComponent
-import com.elo7.desafio.spaceProbe.extension.move
+import com.elo7.desafio.spaceProbe.extension.checkCause
 import com.elo7.desafio.spaceProbe.extension.isInvalidPosition
+import com.elo7.desafio.spaceProbe.extension.move
+import com.elo7.desafio.spaceProbe.extension.specificCause
 import com.elo7.desafio.spaceProbe.model.SpaceProbe
 import com.elo7.desafio.spaceProbe.repository.SpaceProbeRepository
 import com.elo7.desafio.spaceProbe.response.Message
@@ -14,7 +15,6 @@ import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
-import java.sql.SQLIntegrityConstraintViolationException
 import java.util.*
 
 @Service
@@ -27,20 +27,14 @@ class SpaceProbeService(
     fun create(spaceProbe: SpaceProbe): SpaceProbe {
         return try {
             val planet = planetRepository.findById(spaceProbe.planet.id!!)
-            if (planet.isPresent){
+            if (planet.isPresent) {
                 spaceProbe.planet = planet.get()
                 checkPosition(spaceProbe)
             }
             spaceProbeRepository.save(spaceProbe)
         } catch (ex: DataIntegrityViolationException) {
-            val cause = ex.rootCause
-            val specificCause = cause as SQLIntegrityConstraintViolationException
-            if (specificCause.sqlState.equals("23505")) {
-                throw SpaceProbeCollidedException("Está operação causará uma colisão entre as sondas")
-            } else if (specificCause.sqlState.equals("23506")) {
-                throw NotFoundException("Planeta não encontrado")
-            }
-            throw specificCause
+            val specificCause = ex.specificCause()
+            throw specificCause.checkCause()
         }
     }
 
@@ -72,14 +66,20 @@ class SpaceProbeService(
 
         checkPosition(spaceProbe)
 
-        spaceProbeRepository.save(spaceProbe)
+        try {
+            spaceProbeRepository.save(spaceProbe)
+        } catch (ex: DataIntegrityViolationException) {
+            val specificCause = ex.specificCause()
+            specificCause.checkCause()
+        }
 
         return Message("Posição final da sonda: x=${spaceProbe.position.x} y=${spaceProbe.position.y} apontando para ${spaceProbe.position.direction.label}")
     }
 
-    private fun checkPosition(spaceProbe: SpaceProbe){
+    private fun checkPosition(spaceProbe: SpaceProbe) {
         if (spaceProbe.isInvalidPosition()) {
             throw InvalidProbePositionException("Essas instruções iriam levar a sonda para uma posição inválida")
         }
     }
+
 }
