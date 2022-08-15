@@ -6,6 +6,7 @@ import com.elo7.desafio.exception.SpaceProbeCollidedException
 import com.elo7.desafio.planet.model.Planet
 import com.elo7.desafio.planet.repository.PlanetRepository
 import com.elo7.desafio.spaceProbe.component.CommandInterpreterComponent
+import com.elo7.desafio.spaceProbe.model.DirectionEnum
 import com.elo7.desafio.spaceProbe.model.Position
 import com.elo7.desafio.spaceProbe.model.SpaceProbe
 import com.elo7.desafio.spaceProbe.repository.SpaceProbeRepository
@@ -63,7 +64,7 @@ class SpaceProbeServiceTest {
     fun `Testa a criacao de uma sonda`() {
         whenever(spaceProbe.planet).thenReturn(planet)
         whenever(planet.id).thenReturn(PLANET_ID_1)
-        whenever(planetRepository.findById(any())).thenReturn(Optional.of(planet))
+        whenever(planetRepository.findById(PLANET_ID_1)).thenReturn(Optional.of(planet))
         whenever(spaceProbe.planet.height).thenReturn(PLANET_SIZE_Y)
         whenever(spaceProbe.planet.width).thenReturn(PLANET_SIZE_X)
         whenever(spaceProbe.position).thenReturn(position)
@@ -77,7 +78,7 @@ class SpaceProbeServiceTest {
     fun `Erro ao criar uma sonda - 23505 - Colisao de sondas`() {
         whenever(spaceProbe.planet).thenReturn(planet)
         whenever(planet.id).thenReturn(PLANET_ID_1)
-        whenever(planetRepository.findById(any())).thenReturn(Optional.of(planet))
+        whenever(planetRepository.findById(PLANET_ID_1)).thenReturn(Optional.of(planet))
         whenever(spaceProbe.planet.height).thenReturn(PLANET_SIZE_Y)
         whenever(spaceProbe.planet.width).thenReturn(PLANET_SIZE_X)
         whenever(spaceProbe.position).thenReturn(position)
@@ -95,7 +96,7 @@ class SpaceProbeServiceTest {
     fun `Erro ao criar uma sonda - 23506 - Planeta nao encontrado`() {
         whenever(spaceProbe.planet).thenReturn(planet)
         whenever(planet.id).thenReturn(PLANET_ID_1)
-        whenever(planetRepository.findById(any())).thenReturn(Optional.of(planet))
+        whenever(planetRepository.findById(PLANET_ID_1)).thenReturn(Optional.of(planet))
         whenever(spaceProbe.planet.height).thenReturn(PLANET_SIZE_Y)
         whenever(spaceProbe.planet.width).thenReturn(PLANET_SIZE_X)
         whenever(spaceProbe.position).thenReturn(position)
@@ -134,7 +135,7 @@ class SpaceProbeServiceTest {
     }
 
     @Test
-    fun list() {
+    fun `Lista todas as sondas de forma paginada`() {
         whenever(spaceProbeRepository.findAll(PageRequest.of(PAGE_0, SIZE_10))).thenReturn(PageImpl(listOf(spaceProbe)))
         val result = spaceProbeService.list(PAGE_0, SIZE_10)
         assertEquals(1, result.totalElements)
@@ -143,7 +144,7 @@ class SpaceProbeServiceTest {
     }
 
     @Test
-    fun testList() {
+    fun `Lista as sondas paginadas de um planeta`() {
         whenever(spaceProbeRepository.findAllByPlanet_Id(PLANET_ID_1, PageRequest.of(PAGE_0, SIZE_10))).thenReturn(
             PageImpl(
                 listOf(spaceProbe)
@@ -153,6 +154,50 @@ class SpaceProbeServiceTest {
         assertEquals(1, result.totalElements)
         assertTrue(result.isLast)
         assertTrue(result.isFirst)
+    }
+
+    @Test
+    fun executeCommand() {
+        whenever(commandInterpreterComponent.splittedCommand(COMMAND)).thenReturn(charArrayOf('L', 'M'))
+        whenever(spaceProbeRepository.findById(SPACE_PROBE_ID_1)).thenReturn(Optional.of(spaceProbe))
+        whenever(spaceProbe.planet).thenReturn(planet)
+        whenever(spaceProbe.planet.height).thenReturn(PLANET_SIZE_Y)
+        whenever(spaceProbe.planet.width).thenReturn(PLANET_SIZE_X)
+        whenever(spaceProbe.position).thenReturn(position)
+        whenever(spaceProbe.position.x).thenReturn(SPACE_PROBE_POSITION_2)
+        whenever(spaceProbe.position.y).thenReturn(SPACE_PROBE_POSITION_3)
+        whenever(spaceProbe.position.direction).thenReturn(DirectionEnum.NORTH)
+        val message = "Posição final da sonda: x=2 y=3 apontando para norte"
+        val result = spaceProbeService.executeCommand(COMMAND, SPACE_PROBE_ID_1)
+        assertEquals(message, result.message)
+    }
+
+    @Test
+    fun `Erro ao executar comando - Sonda nao encontrada`() {
+        whenever(commandInterpreterComponent.splittedCommand(COMMAND)).thenReturn(charArrayOf('L', 'M'))
+        whenever(spaceProbeRepository.findById(SPACE_PROBE_ID_1)).thenReturn(Optional.empty())
+        assertThrows<NotFoundException> {
+            spaceProbeService.executeCommand(COMMAND, SPACE_PROBE_ID_1)
+        }
+    }
+
+    @Test
+    fun `Erro ao executar comando - Colisao de sondas`() {
+        whenever(commandInterpreterComponent.splittedCommand(COMMAND)).thenReturn(charArrayOf('L', 'M'))
+        whenever(spaceProbeRepository.findById(SPACE_PROBE_ID_1)).thenReturn(Optional.of(spaceProbe))
+        whenever(spaceProbe.planet).thenReturn(planet)
+        whenever(spaceProbe.planet.height).thenReturn(PLANET_SIZE_Y)
+        whenever(spaceProbe.planet.width).thenReturn(PLANET_SIZE_X)
+        whenever(spaceProbe.position).thenReturn(position)
+        whenever(spaceProbe.position.x).thenReturn(SPACE_PROBE_POSITION_2)
+        whenever(spaceProbe.position.y).thenReturn(SPACE_PROBE_POSITION_3)
+        whenever(spaceProbe.position.direction).thenReturn(DirectionEnum.NORTH)
+        whenever(spaceProbeRepository.save(spaceProbe)).thenThrow(dataIntegrityViolationException)
+        whenever(dataIntegrityViolationException.rootCause).thenReturn(sqlIntegrityConstraintViolationException)
+        whenever(sqlIntegrityConstraintViolationException.sqlState).thenReturn("23505")
+        assertThrows<SpaceProbeCollidedException> {
+            spaceProbeService.executeCommand(COMMAND, SPACE_PROBE_ID_1)
+        }
     }
 
 }

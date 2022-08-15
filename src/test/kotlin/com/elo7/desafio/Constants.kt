@@ -9,3 +9,4 @@ const val SPACE_PROBE_POSITION_2 = 2
 const val SPACE_PROBE_POSITION_3 = 3
 const val PAGE_0 = 0
 const val SIZE_10 = 10
+const val COMMAND = "LM"
