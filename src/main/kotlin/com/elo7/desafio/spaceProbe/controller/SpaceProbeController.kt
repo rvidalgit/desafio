@@ -6,6 +6,7 @@ import com.elo7.desafio.spaceProbe.request.CommandRequest
 import com.elo7.desafio.spaceProbe.response.Message
 import com.elo7.desafio.spaceProbe.service.SpaceProbeService
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
@@ -85,39 +86,44 @@ class SpaceProbeController(
         return ResponseEntity.of(spaceProbeService.get(id))
     }
 
-    @Operation(summary = "Responsável por retornar uma lista paginada de sondas")
+    @Operation(
+        summary = "Responsável por retornar uma lista paginada de sondas",
+        parameters = [
+            Parameter(
+                name = "idPlanet",
+                required = false,
+                description = "Id do planeta a ser filtrado",
+                schema = Schema(implementation = Long::class)
+            ),
+            Parameter(
+                name = "size",
+                description = "Tamanho da lista",
+            ),
+            Parameter(
+                name = "page",
+                description = "Número da página",
+            )
+        ]
+    )
     @ApiResponse(
         content = [Content(
             mediaType = "application/json",
-            schema = Schema(implementation = Page::class)
+            schema = Schema(implementation = Page::class),
         )],
-        responseCode = "200"
+        responseCode = "200",
     )
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     fun list(
         @RequestParam("page", defaultValue = "0", required = false) page: Int,
-        @RequestParam("size", defaultValue = "10", required = false) size: Int
-    ): Page<SpaceProbe> {
-        return spaceProbeService.list(page, size)
-    }
-
-    @Operation(summary = "Responsável por retornar uma lista paginada de sondas de um planeta")
-    @ApiResponse(
-        content = [Content(
-            mediaType = "application/json",
-            schema = Schema(implementation = Page::class)
-        )],
-        responseCode = "200"
-    )
-    @GetMapping("/planet/{idPlaneta:\\d+}")
-    @ResponseStatus(HttpStatus.OK)
-    fun listByPlanet(
-        @RequestParam("page", defaultValue = "0", required = false) page: Int,
         @RequestParam("size", defaultValue = "10", required = false) size: Int,
-        @PathVariable idPlaneta: Long
+        @RequestParam(required = false) idPlanet: Long?
     ): Page<SpaceProbe> {
-        return spaceProbeService.list(page, size, idPlaneta)
+        return if (idPlanet == null) {
+            spaceProbeService.list(page, size)
+        } else {
+            spaceProbeService.list(page, size, idPlanet)
+        }
     }
 
     @Operation(summary = "Responsável por remover uma sonda")
