@@ -3,13 +3,13 @@ package com.elo7.desafio.spaceProbe.service
 import com.elo7.desafio.exception.InvalidProbePositionException
 import com.elo7.desafio.exception.NotFoundException
 import com.elo7.desafio.planet.service.PlanetService
-import com.elo7.desafio.spaceProbe.component.CommandInterpreterComponent
 import com.elo7.desafio.spaceProbe.extension.checkCause
 import com.elo7.desafio.spaceProbe.extension.isInvalidPosition
 import com.elo7.desafio.spaceProbe.extension.move
 import com.elo7.desafio.spaceProbe.extension.specificCause
 import com.elo7.desafio.spaceProbe.model.SpaceProbe
 import com.elo7.desafio.spaceProbe.repository.SpaceProbeRepository
+import com.elo7.desafio.spaceProbe.request.Command
 import com.elo7.desafio.spaceProbe.response.Message
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.domain.Page
@@ -20,7 +20,6 @@ import java.util.*
 @Service
 class SpaceProbeService(
     val spaceProbeRepository: SpaceProbeRepository,
-    val commandInterpreterComponent: CommandInterpreterComponent,
     val planetService: PlanetService
 ) {
 
@@ -58,14 +57,13 @@ class SpaceProbeService(
         return spaceProbeRepository.deleteById(id)
     }
 
-    fun executeCommand(actions: String, idProbe: Long): Message {
-        val actionList = commandInterpreterComponent.splittedCommand(actions)
+    fun executeCommand(actions: List<Command>, idProbe: Long): Message {
         val spaceProbe = spaceProbeRepository.findById(idProbe).orElseThrow {
             NotFoundException("Sonda não encontrada")
         }
 
-        actionList.forEach {
-            spaceProbe.position.move(it)
+        actions.forEach {
+            spaceProbe.position.move(it.name)
         }
 
         checkPosition(spaceProbe)

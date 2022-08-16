@@ -2,6 +2,7 @@ package com.elo7.desafio.spaceProbe.controller
 
 import com.elo7.desafio.*
 import com.elo7.desafio.util.TestUtil
+import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
@@ -265,11 +266,10 @@ class SpaceProbeControllerTest {
         )
             .andExpect(MockMvcResultMatchers.status().isBadRequest)
             .andExpect(
-                MockMvcResultMatchers.jsonPath("\$.message")
-                    .value("O comando informado é inválido: 'Z'")
-            )
-            .andExpect(
-                MockMvcResultMatchers.jsonPath("\$.timestamp").isNotEmpty
+                MockMvcResultMatchers.jsonPath(
+                    "\$.message",
+                    Matchers.equalTo("Cannot deserialize value of type `com.elo7.desafio.spaceProbe.request.Command` from String \"Z\": not one of the values accepted for Enum class: [R, L, M]")
+                )
             )
     }
 

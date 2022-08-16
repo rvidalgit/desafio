@@ -6,6 +6,7 @@ import com.elo7.desafio.exception.InvalidCommandException
 import com.elo7.desafio.exception.InvalidProbePositionException
 import com.elo7.desafio.exception.NotFoundException
 import com.elo7.desafio.exception.SpaceProbeCollidedException
+import com.fasterxml.jackson.databind.exc.InvalidFormatException
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.context.request.WebRequest
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
+
 
 @ControllerAdvice
 class ControllerAdviceError : ResponseEntityExceptionHandler() {
@@ -36,6 +38,9 @@ class ControllerAdviceError : ResponseEntityExceptionHandler() {
             val fieldName = missingException.path.joinToString(separator = ".") { it.fieldName }
             val error = ValidationError(fieldName, "cannot be null or empty")
             return generateErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, "Validation failed", listOf(error))
+        } else if (cause is InvalidFormatException) {
+            val invalidException: InvalidFormatException = cause
+            return generateErrorResponse(HttpStatus.BAD_REQUEST, invalidException.originalMessage, null)
         }
         return generateErrorResponse(status, ex.message, null)
     }
@@ -80,4 +85,5 @@ class ControllerAdviceError : ResponseEntityExceptionHandler() {
     ): ResponseEntity<Any> {
         return ResponseEntity(ErrorResponse(status, message, errors), status)
     }
+
 }

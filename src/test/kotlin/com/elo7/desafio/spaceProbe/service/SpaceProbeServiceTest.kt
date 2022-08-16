@@ -5,7 +5,6 @@ import com.elo7.desafio.exception.NotFoundException
 import com.elo7.desafio.exception.SpaceProbeCollidedException
 import com.elo7.desafio.planet.model.Planet
 import com.elo7.desafio.planet.service.PlanetService
-import com.elo7.desafio.spaceProbe.component.CommandInterpreterComponent
 import com.elo7.desafio.spaceProbe.model.Direction
 import com.elo7.desafio.spaceProbe.model.Position
 import com.elo7.desafio.spaceProbe.model.SpaceProbe
@@ -28,9 +27,6 @@ import java.util.*
 
 @ExtendWith(MockitoExtension::class)
 class SpaceProbeServiceTest {
-
-    @Mock
-    private lateinit var commandInterpreterComponent: CommandInterpreterComponent
 
     @Mock
     private lateinit var planetService: PlanetService
@@ -157,7 +153,6 @@ class SpaceProbeServiceTest {
 
     @Test
     fun executeCommand() {
-        whenever(commandInterpreterComponent.splittedCommand(COMMAND)).thenReturn(charArrayOf('L', 'M'))
         whenever(spaceProbeRepository.findById(SPACE_PROBE_ID_1)).thenReturn(Optional.of(spaceProbe))
         whenever(spaceProbe.planet).thenReturn(planet)
         whenever(spaceProbe.planet.height).thenReturn(PLANET_SIZE_Y)
@@ -173,7 +168,6 @@ class SpaceProbeServiceTest {
 
     @Test
     fun `Erro ao executar comando - Sonda nao encontrada`() {
-        whenever(commandInterpreterComponent.splittedCommand(COMMAND)).thenReturn(charArrayOf('L', 'M'))
         whenever(spaceProbeRepository.findById(SPACE_PROBE_ID_1)).thenReturn(Optional.empty())
         assertThrows<NotFoundException> {
             spaceProbeService.executeCommand(COMMAND, SPACE_PROBE_ID_1)
@@ -182,7 +176,6 @@ class SpaceProbeServiceTest {
 
     @Test
     fun `Erro ao executar comando - Colisao de sondas`() {
-        whenever(commandInterpreterComponent.splittedCommand(COMMAND)).thenReturn(charArrayOf('L', 'M'))
         whenever(spaceProbeRepository.findById(SPACE_PROBE_ID_1)).thenReturn(Optional.of(spaceProbe))
         whenever(spaceProbe.planet).thenReturn(planet)
         whenever(spaceProbe.planet.height).thenReturn(PLANET_SIZE_Y)

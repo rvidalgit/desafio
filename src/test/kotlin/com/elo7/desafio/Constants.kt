@@ -1,5 +1,7 @@
 package com.elo7.desafio
 
+import com.elo7.desafio.spaceProbe.request.Command
+
 const val PLANET_ID_1 = 1L
 const val PLANET_ID_2 = 2L
 const val PLANET_SIZE_Y = 5
@@ -11,5 +13,5 @@ const val SPACE_PROBE_POSITION_2 = 2
 const val SPACE_PROBE_POSITION_3 = 3
 const val PAGE_0 = 0
 const val SIZE_10 = 10
-const val COMMAND = "LM"
+val COMMAND = listOf(Command.L, Command.M)
 const val NORTH = "NORTH"

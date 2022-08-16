@@ -7,10 +7,10 @@ class DirectionTest {
 
     @Test
     fun testTurnLeft() {
-        val n = Direction.NORTH.turn('L')
-        val s = Direction.SOUTH.turn('L')
-        val w = Direction.WEST.turn('L')
-        val e = Direction.EAST.turn('L')
+        val n = Direction.NORTH.turn("L")
+        val s = Direction.SOUTH.turn("L")
+        val w = Direction.WEST.turn("L")
+        val e = Direction.EAST.turn("L")
         assertEquals(Direction.WEST, n)
         assertEquals(Direction.EAST, s)
         assertEquals(Direction.SOUTH, w)
@@ -19,10 +19,10 @@ class DirectionTest {
 
     @Test
     fun testTurnRight() {
-        val n = Direction.NORTH.turn('R')
-        val s = Direction.SOUTH.turn('R')
-        val w = Direction.WEST.turn('R')
-        val e = Direction.EAST.turn('R')
+        val n = Direction.NORTH.turn("R")
+        val s = Direction.SOUTH.turn("R")
+        val w = Direction.WEST.turn("R")
+        val e = Direction.EAST.turn("R")
         assertEquals(Direction.EAST, n)
         assertEquals(Direction.WEST, s)
         assertEquals(Direction.NORTH, w)
@@ -30,7 +30,7 @@ class DirectionTest {
     }
 
     @Test
-    fun testGetOperation(){
+    fun testGetOperation() {
         assertEquals(Direction.EAST.operation, 1)
         assertEquals(Direction.WEST.operation, -1)
         assertEquals(Direction.NORTH.operation, 1)
@@ -39,7 +39,7 @@ class DirectionTest {
     }
 
     @Test
-    fun testGetLabel(){
+    fun testGetLabel() {
         assertEquals(Direction.EAST.label, "leste")
         assertEquals(Direction.WEST.label, "oeste")
         assertEquals(Direction.NORTH.label, "norte")
@@ -48,9 +48,9 @@ class DirectionTest {
 
     @Test
     fun findByLabel() {
-        assertEquals(Direction.findByLabel("leste"),Direction.EAST)
-        assertEquals(Direction.findByLabel("oeste"),Direction.WEST)
-        assertEquals(Direction.findByLabel("Norte"),Direction.NORTH)
-        assertEquals(Direction.findByLabel("Sul"),Direction.SOUTH)
+        assertEquals(Direction.findByLabel("leste"), Direction.EAST)
+        assertEquals(Direction.findByLabel("oeste"), Direction.WEST)
+        assertEquals(Direction.findByLabel("Norte"), Direction.NORTH)
+        assertEquals(Direction.findByLabel("Sul"), Direction.SOUTH)
     }
 }

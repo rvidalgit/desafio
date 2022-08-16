@@ -1,3 +1,15 @@
 {
-  "command": "MMRMMRMRRML"
+  "command": [
+    "M",
+    "M",
+    "R",
+    "M",
+    "M",
+    "R",
+    "M",
+    "R",
+    "R",
+    "M",
+    "L"
+  ]
 }

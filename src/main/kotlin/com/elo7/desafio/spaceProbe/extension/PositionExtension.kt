@@ -3,15 +3,15 @@ package com.elo7.desafio.spaceProbe.extension
 import com.elo7.desafio.spaceProbe.model.Direction
 import com.elo7.desafio.spaceProbe.model.Position
 
-fun Position.move(action: Char) {
-    if (action == 'M') {
+fun Position.move(action: String) {
+    if (action == "M") {
         toWalk()
     } else {
         turn(action)
     }
 }
 
-private fun Position.turn(to: Char) {
+private fun Position.turn(to: String) {
     direction = direction.turn(to)
 }
 

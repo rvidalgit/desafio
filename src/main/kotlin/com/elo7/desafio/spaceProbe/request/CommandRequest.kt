@@ -5,5 +5,5 @@ import javax.validation.constraints.NotEmpty
 class CommandRequest {
 
     @field:NotEmpty
-    lateinit var command: String
+    lateinit var command: List<Command>
 }

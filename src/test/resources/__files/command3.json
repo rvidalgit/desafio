@@ -1,3 +1,9 @@
 {
-  "command": "MMMMM"
+  "command": [
+    "M",
+    "M",
+    "M",
+    "M",
+    "M"
+  ]
 }
