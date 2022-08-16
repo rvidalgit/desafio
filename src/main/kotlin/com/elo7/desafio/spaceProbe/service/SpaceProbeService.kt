@@ -2,7 +2,7 @@ package com.elo7.desafio.spaceProbe.service
 
 import com.elo7.desafio.exception.InvalidProbePositionException
 import com.elo7.desafio.exception.NotFoundException
-import com.elo7.desafio.planet.repository.PlanetRepository
+import com.elo7.desafio.planet.service.PlanetService
 import com.elo7.desafio.spaceProbe.component.CommandInterpreterComponent
 import com.elo7.desafio.spaceProbe.extension.checkCause
 import com.elo7.desafio.spaceProbe.extension.isInvalidPosition
@@ -21,12 +21,12 @@ import java.util.*
 class SpaceProbeService(
     val spaceProbeRepository: SpaceProbeRepository,
     val commandInterpreterComponent: CommandInterpreterComponent,
-    val planetRepository: PlanetRepository
+    val planetService: PlanetService
 ) {
 
     fun create(spaceProbe: SpaceProbe): SpaceProbe {
         return try {
-            val planet = planetRepository.findById(spaceProbe.planet.id!!)
+            val planet = planetService.get(spaceProbe.planet.id!!)
             if (planet.isPresent) {
                 spaceProbe.planet = planet.get()
                 checkPosition(spaceProbe)
