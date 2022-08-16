@@ -254,6 +254,26 @@ class SpaceProbeControllerTest {
     }
 
     @Test
+    @Sql("/sql/insert-multi-planet-and-space-probe.sql")
+    fun `Teste com erro - comando invalido`() {
+        mvc.perform(
+            MockMvcRequestBuilders
+                .patch("$URL_BASE/$SPACE_PROBE_ID_1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(TestUtil.readJsonFile("invalid-command.json"))
+        )
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andExpect(
+                MockMvcResultMatchers.jsonPath("\$.message")
+                    .value("O comando informado é inválido: 'Z'")
+            )
+            .andExpect(
+                MockMvcResultMatchers.jsonPath("\$.timestamp").isNotEmpty
+            )
+    }
+
+    @Test
     fun `Teste com erro - sonda nao encontrada`() {
         mvc.perform(
             MockMvcRequestBuilders

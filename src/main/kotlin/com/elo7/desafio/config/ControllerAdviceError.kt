@@ -2,6 +2,7 @@ package com.elo7.desafio.config
 
 import com.elo7.desafio.config.exception.ErrorResponse
 import com.elo7.desafio.config.exception.ValidationError
+import com.elo7.desafio.exception.InvalidCommandException
 import com.elo7.desafio.exception.InvalidProbePositionException
 import com.elo7.desafio.exception.NotFoundException
 import com.elo7.desafio.exception.SpaceProbeCollidedException
@@ -48,9 +49,9 @@ class ControllerAdviceError : ResponseEntityExceptionHandler() {
         return generateErrorResponse(HttpStatus.NOT_FOUND, ex.message, null)
     }
 
-    @ExceptionHandler(value = [InvalidProbePositionException::class])
+    @ExceptionHandler(value = [InvalidProbePositionException::class, InvalidCommandException::class])
     fun handleInvalidProbePositionException(
-        ex: InvalidProbePositionException,
+        ex: Exception,
         request: WebRequest
     ): ResponseEntity<Any> {
         log.error(ex.message, ex)

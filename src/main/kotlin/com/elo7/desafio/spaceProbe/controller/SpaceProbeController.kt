@@ -175,6 +175,13 @@ class SpaceProbeController(
                 mediaType = "application/json",
                 schema = Schema(implementation = ValidationError::class)
             )]
+        ),
+        ApiResponse(
+            responseCode = "400", description = "Comando inválido",
+            content = [Content(
+                mediaType = "application/json",
+                schema = Schema(implementation = ValidationError::class)
+            )]
         )
     )
     @PatchMapping("/{id:\\d+}")
