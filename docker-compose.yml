@@ -14,11 +14,21 @@ services:
     depends_on:
       - db
   db:
-    image: postgres:14.4-alpine
-    restart: always
+    image: postgres:latest
+    restart: on-failure
     container_name: desafio-db
     ports:
       - "5432:5432"
     environment:
+      POSTGRES_USER: ${SPRING_DATASOURCE_USERNAME}
       POSTGRES_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
       POSTGRES_DB: ${SPRING_DATASOURCE_DATABASE}
+  pgadmin:
+    container_name: pgadmin4
+    image: dpage/pgadmin4
+    restart: on-failure
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@elo7.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - "5050:80"
