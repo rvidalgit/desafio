@@ -6,7 +6,7 @@ import com.elo7.desafio.exception.SpaceProbeCollidedException
 import com.elo7.desafio.planet.model.Planet
 import com.elo7.desafio.planet.repository.PlanetRepository
 import com.elo7.desafio.spaceProbe.component.CommandInterpreterComponent
-import com.elo7.desafio.spaceProbe.model.DirectionEnum
+import com.elo7.desafio.spaceProbe.model.Direction
 import com.elo7.desafio.spaceProbe.model.Position
 import com.elo7.desafio.spaceProbe.model.SpaceProbe
 import com.elo7.desafio.spaceProbe.repository.SpaceProbeRepository
@@ -166,7 +166,7 @@ class SpaceProbeServiceTest {
         whenever(spaceProbe.position).thenReturn(position)
         whenever(spaceProbe.position.x).thenReturn(SPACE_PROBE_POSITION_2)
         whenever(spaceProbe.position.y).thenReturn(SPACE_PROBE_POSITION_3)
-        whenever(spaceProbe.position.direction).thenReturn(DirectionEnum.NORTH)
+        whenever(spaceProbe.position.direction).thenReturn(Direction.NORTH)
         val message = "Posição final da sonda: x=2 y=3 apontando para norte"
         val result = spaceProbeService.executeCommand(COMMAND, SPACE_PROBE_ID_1)
         assertEquals(message, result.message)
@@ -191,7 +191,7 @@ class SpaceProbeServiceTest {
         whenever(spaceProbe.position).thenReturn(position)
         whenever(spaceProbe.position.x).thenReturn(SPACE_PROBE_POSITION_2)
         whenever(spaceProbe.position.y).thenReturn(SPACE_PROBE_POSITION_3)
-        whenever(spaceProbe.position.direction).thenReturn(DirectionEnum.NORTH)
+        whenever(spaceProbe.position.direction).thenReturn(Direction.NORTH)
         whenever(spaceProbeRepository.save(spaceProbe)).thenThrow(dataIntegrityViolationException)
         whenever(dataIntegrityViolationException.rootCause).thenReturn(sqlIntegrityConstraintViolationException)
         whenever(sqlIntegrityConstraintViolationException.sqlState).thenReturn("23505")

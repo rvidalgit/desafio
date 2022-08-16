@@ -5,7 +5,6 @@ import javax.persistence.Column
 import javax.persistence.Embeddable
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
-import javax.validation.constraints.Positive
 
 @Validated
 @Embeddable
@@ -15,5 +14,5 @@ data class Position(
 
     @field:Column(nullable = false, length = 5)
     @field:Enumerated(EnumType.STRING)
-    var direction: DirectionEnum,
+    var direction: Direction,
 )

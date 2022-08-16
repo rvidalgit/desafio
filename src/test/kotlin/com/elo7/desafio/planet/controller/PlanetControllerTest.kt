@@ -4,7 +4,7 @@ import com.elo7.desafio.PLANET_ID_1
 import com.elo7.desafio.PLANET_ID_2
 import com.elo7.desafio.planet.model.Planet
 import com.elo7.desafio.planet.repository.PlanetRepository
-import com.elo7.desafio.spaceProbe.model.DirectionEnum
+import com.elo7.desafio.spaceProbe.model.Direction
 import com.elo7.desafio.spaceProbe.model.Position
 import com.elo7.desafio.spaceProbe.model.SpaceProbe
 import com.elo7.desafio.spaceProbe.repository.SpaceProbeRepository
@@ -16,7 +16,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.annotation.DirtiesContext
-import org.springframework.test.context.jdbc.Sql
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
@@ -140,7 +139,7 @@ class PlanetControllerTest {
         val planet = createPlanet()
         val spaceProbe = SpaceProbe(
             null,
-            Position(1, 2, DirectionEnum.NORTH),
+            Position(1, 2, Direction.NORTH),
             null,
             null,
             planet

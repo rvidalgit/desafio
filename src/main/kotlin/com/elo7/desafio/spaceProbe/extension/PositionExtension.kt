@@ -1,6 +1,6 @@
 package com.elo7.desafio.spaceProbe.extension
 
-import com.elo7.desafio.spaceProbe.model.DirectionEnum
+import com.elo7.desafio.spaceProbe.model.Direction
 import com.elo7.desafio.spaceProbe.model.Position
 
 fun Position.move(action: Char) {
@@ -16,6 +16,6 @@ private fun Position.turn(to: Char) {
 }
 
 private fun Position.toWalk() {
-    if (direction === DirectionEnum.NORTH || direction === DirectionEnum.SOUTH) y += direction.operation
-    if (direction === DirectionEnum.EAST || direction === DirectionEnum.WEST) x += direction.operation
+    if (direction === Direction.NORTH || direction === Direction.SOUTH) y += direction.operation
+    if (direction === Direction.EAST || direction === Direction.WEST) x += direction.operation
 }
