@@ -46,8 +46,12 @@ class SpaceProbeService(
         return spaceProbeRepository.findAll(PageRequest.of(page, size))
     }
 
-    fun list(page: Int, size: Int, idPlaneta: Long): Page<SpaceProbe> {
-        return spaceProbeRepository.findAllByPlanet_Id(idPlaneta, PageRequest.of(page, size))
+    fun list(page: Int, size: Int, idPlanet: Long?): Page<SpaceProbe> {
+        return if (idPlanet == null) {
+            list(page, size)
+        } else {
+            spaceProbeRepository.findAllByPlanet_Id(idPlanet, PageRequest.of(page, size))
+        }
     }
 
     fun delete(id: Long) {

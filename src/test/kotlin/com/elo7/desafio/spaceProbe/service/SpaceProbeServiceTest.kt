@@ -4,7 +4,7 @@ import com.elo7.desafio.*
 import com.elo7.desafio.exception.NotFoundException
 import com.elo7.desafio.exception.SpaceProbeCollidedException
 import com.elo7.desafio.planet.model.Planet
-import com.elo7.desafio.planet.repository.PlanetRepository
+import com.elo7.desafio.planet.service.PlanetService
 import com.elo7.desafio.spaceProbe.component.CommandInterpreterComponent
 import com.elo7.desafio.spaceProbe.model.Direction
 import com.elo7.desafio.spaceProbe.model.Position
@@ -19,7 +19,6 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Spy
 import org.mockito.junit.jupiter.MockitoExtension
-import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.domain.PageImpl
@@ -34,7 +33,7 @@ class SpaceProbeServiceTest {
     private lateinit var commandInterpreterComponent: CommandInterpreterComponent
 
     @Mock
-    private lateinit var planetRepository: PlanetRepository
+    private lateinit var planetService: PlanetService
 
     @Mock
     private lateinit var spaceProbeRepository: SpaceProbeRepository
@@ -64,7 +63,7 @@ class SpaceProbeServiceTest {
     fun `Testa a criacao de uma sonda`() {
         whenever(spaceProbe.planet).thenReturn(planet)
         whenever(planet.id).thenReturn(PLANET_ID_1)
-        whenever(planetRepository.findById(PLANET_ID_1)).thenReturn(Optional.of(planet))
+        whenever(planetService.get(PLANET_ID_1)).thenReturn(Optional.of(planet))
         whenever(spaceProbe.planet.height).thenReturn(PLANET_SIZE_Y)
         whenever(spaceProbe.planet.width).thenReturn(PLANET_SIZE_X)
         whenever(spaceProbe.position).thenReturn(position)
@@ -78,7 +77,7 @@ class SpaceProbeServiceTest {
     fun `Erro ao criar uma sonda - 23505 - Colisao de sondas`() {
         whenever(spaceProbe.planet).thenReturn(planet)
         whenever(planet.id).thenReturn(PLANET_ID_1)
-        whenever(planetRepository.findById(PLANET_ID_1)).thenReturn(Optional.of(planet))
+        whenever(planetService.get(PLANET_ID_1)).thenReturn(Optional.of(planet))
         whenever(spaceProbe.planet.height).thenReturn(PLANET_SIZE_Y)
         whenever(spaceProbe.planet.width).thenReturn(PLANET_SIZE_X)
         whenever(spaceProbe.position).thenReturn(position)
@@ -96,7 +95,7 @@ class SpaceProbeServiceTest {
     fun `Erro ao criar uma sonda - 23506 - Planeta nao encontrado`() {
         whenever(spaceProbe.planet).thenReturn(planet)
         whenever(planet.id).thenReturn(PLANET_ID_1)
-        whenever(planetRepository.findById(PLANET_ID_1)).thenReturn(Optional.of(planet))
+        whenever(planetService.get(PLANET_ID_1)).thenReturn(Optional.of(planet))
         whenever(spaceProbe.planet.height).thenReturn(PLANET_SIZE_Y)
         whenever(spaceProbe.planet.width).thenReturn(PLANET_SIZE_X)
         whenever(spaceProbe.position).thenReturn(position)
@@ -114,7 +113,7 @@ class SpaceProbeServiceTest {
     fun `Erro desconhecido ao criar uma sonda`() {
         whenever(spaceProbe.planet).thenReturn(planet)
         whenever(planet.id).thenReturn(PLANET_ID_1)
-        whenever(planetRepository.findById(any())).thenReturn(Optional.of(planet))
+        whenever(planetService.get(PLANET_ID_1)).thenReturn(Optional.of(planet))
         whenever(spaceProbe.planet.height).thenReturn(PLANET_SIZE_Y)
         whenever(spaceProbe.planet.width).thenReturn(PLANET_SIZE_X)
         whenever(spaceProbe.position).thenReturn(position)

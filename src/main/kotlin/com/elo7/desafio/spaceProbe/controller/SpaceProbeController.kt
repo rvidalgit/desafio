@@ -119,11 +119,7 @@ class SpaceProbeController(
         @RequestParam("size", defaultValue = "10", required = false) size: Int,
         @RequestParam(required = false) idPlanet: Long?
     ): Page<SpaceProbe> {
-        return if (idPlanet == null) {
-            spaceProbeService.list(page, size)
-        } else {
-            spaceProbeService.list(page, size, idPlanet)
-        }
+        return spaceProbeService.list(page, size, idPlanet)
     }
 
     @Operation(summary = "Responsável por remover uma sonda")
